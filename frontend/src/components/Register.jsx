@@ -2,6 +2,7 @@ import { useState } from "react";
 import registerIcon from "../assets/signin.gif";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { imageToBase64 } from "../helpers/imageToBase64";
 const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -20,11 +21,17 @@ const Register = () => {
     setData({ ...data, [name]: value });
   };
 
-  const handleUploadPic = e =>{
-    const file = e.target.files[0]
-    console.log("file",file);
-    
-  }
+  const handleUploadPic = async (e) => {
+    const file = e.target.files[0];
+    const imagePic = await imageToBase64(file);
+    console.log("imagePic", imagePic);
+    setData((prev) => {
+      return {
+        ...prev,
+        profilePic: imagePic,
+      };
+    });
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -36,19 +43,19 @@ const Register = () => {
           {/* register icon */}
           <div className="relative w-20 h-20 mx-auto overflow-hidden rounded-full">
             <div>
-              <img className="" src={registerIcon} alt="login icon.." />
+              <img src={data.profilePic||registerIcon} alt="login icon.." />
             </div>
             <form>
               <label>
                 <div className="absolute bottom-0 w-full pt-2 pb-4 font-sans text-xs font-medium text-center cursor-pointer bg-opacity-80 bg-slate-200">
                   Upload Photo
                 </div>
-                <input 
-                onChange={handleUploadPic}
-                className="hidden"
-                type="file" 
-                name="photo"
-                 />
+                <input
+                  onChange={handleUploadPic}
+                  className="hidden"
+                  type="file"
+                  name="photo"
+                />
               </label>
             </form>
           </div>
@@ -66,6 +73,7 @@ const Register = () => {
                   type="text"
                   name="name"
                   placeholder="enter your name"
+                  required
                 />
               </div>
             </div>
@@ -80,6 +88,7 @@ const Register = () => {
                   type="email"
                   name="email"
                   placeholder="enter your email"
+                  required
                 />
               </div>
             </div>
@@ -94,6 +103,7 @@ const Register = () => {
                   type={showPassword ? "text" : "password"}
                   name="password"
                   placeholder="enter your password"
+                  required
                 />
                 <div
                   onClick={() => setShowPassword(!showPassword)}
@@ -114,6 +124,7 @@ const Register = () => {
                   type={showConfirmPassword ? "text" : "password"}
                   name="password"
                   placeholder="enter confirm password"
+                  required
                 />
                 <div
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
@@ -128,6 +139,7 @@ const Register = () => {
               Register
             </button>
           </form>
+
           <p className="block w-full mx-auto my-5">
             Have an account? Please{" "}
             <Link
