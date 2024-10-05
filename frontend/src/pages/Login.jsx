@@ -33,7 +33,7 @@ console.log(data);
           {/* form section */}
           <form 
           onSubmit={handleSubmit}
-          className="pt-5">
+          className="pt-5 space-y-2">
             {/* email */}
             <div className="grid">
               <label>Email:</label>
